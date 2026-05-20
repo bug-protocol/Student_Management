@@ -3,14 +3,14 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from Student_Management.app.database.connection import get_db
+from app.database.connection import get_db
 
-from Student_Management.app.schemas.course_schema import (
+from app.schemas.course_schema import (
     CourseCreate,
     CourseResponse
 )
 
-from Student_Management.app.services.course_service import (
+from app.services.course_service import (
     create_course,
     get_all_courses,
     get_course_by_id,
@@ -20,7 +20,7 @@ from Student_Management.app.services.course_service import (
 router = APIRouter()
 
 
-@router.post("/courses", response_model=CourseResponse)
+@router.post("/courses", response_model=CourseResponse, status_code = 201)
 def register_course(
     course: CourseCreate,
     db: Session = Depends(get_db)

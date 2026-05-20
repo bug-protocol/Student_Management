@@ -1,4 +1,4 @@
-from Student_Management.app.database.db import enrollments
+from app.database.db import enrollments
 
 
 def enroll_student(student_id: str, course_id: str):

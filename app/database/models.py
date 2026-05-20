@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from Student_Management.app.database.connection import Base
+from app.database.connection import Base
 
 
 class Student(Base):
@@ -16,6 +16,18 @@ class Course(Base):
 
     __tablename__ = "courses"
     id = Column(String, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, unique = True, nullable=False)
     description = Column(String)
     duration = Column(String)
+
+class User(Base):
+
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, index=True)
+
+    email = Column(String, unique=True, nullable=False)
+
+    password = Column(String, nullable=False)
+
+    role = Column(String, nullable=False)

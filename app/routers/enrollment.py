@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from Student_Management.app.services.enrollment_service import (
+from app.services.enrollment_service import (
     enroll_student,
     get_enrollments
 )
