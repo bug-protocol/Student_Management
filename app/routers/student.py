@@ -30,9 +30,15 @@ def register_student(
 
 @router.get("/students", response_model=List[StudentResponse])
 def fetch_students(
+    page: int = 1,
+    limit: int = 10,
     db: Session = Depends(get_db)
 ):
-    return get_all_students(db)
+    return get_all_students(
+        db,
+        page,
+        limit
+    )
 
 
 @router.get("/students/{student_id}", response_model=StudentResponse)

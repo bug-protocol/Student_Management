@@ -4,6 +4,11 @@ from sqlalchemy.orm import Session
 
 from app.database.models import Student
 
+from app.exceptions.custom_exceptions import (
+    StudentNotFoundException,
+    DuplicateStudentException
+)
+
 
 def create_student(db: Session, student_data):
     existing_student = db.query(Student).filter(
@@ -11,10 +16,7 @@ def create_student(db: Session, student_data):
     ).first()
 
     if existing_student:
-        raise HTTPException(
-            status_code=409,
-            detail="Student with this email already exists"
-        )
+        raise DuplicateStudentException()
     student = Student(
         id=str(uuid.uuid4()),
         name=student_data.name,
@@ -31,9 +33,20 @@ def create_student(db: Session, student_data):
     return student
 
 
-def get_all_students(db: Session):
+def get_all_students(
+    db: Session,
+    page: int = 1,
+    limit: int = 10
+):
 
-    return db.query(Student).all()
+    offset = (page - 1) * limit
+
+    students = db.query(Student)\
+        .offset(offset)\
+        .limit(limit)\
+        .all()
+
+    return students
 
 
 def get_student_by_id(db: Session, student_id: str):
@@ -43,10 +56,7 @@ def get_student_by_id(db: Session, student_id: str):
     ).first()
 
     if not student:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
+        raise StudentNotFoundException()
 
     return student
 
@@ -58,10 +68,7 @@ def delete_student(db: Session, student_id: str):
     ).first()
 
     if not student:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
+        raise StudentNotFoundException()
 
     db.delete(student)
 
